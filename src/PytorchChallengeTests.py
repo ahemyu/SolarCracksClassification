@@ -41,7 +41,7 @@ class TestDataset(unittest.TestCase):
         csv_path = ''
         for root, _, files in os.walk('.'):
             for name in files:
-                if name == 'data.csv':
+                if name == 'labels.csv':
                     csv_path = os.path.join(root, name)
         self.assertNotEqual(csv_path, '', 'Could not locate the data.csv file')
         self.tab = pd.read_csv(csv_path, sep=';')

@@ -1,2 +1,4 @@
 AGENTS.md
 CLAUDE.md
+.venv/
+__pycache__/

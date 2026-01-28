@@ -57,6 +57,7 @@ class Trainer:
         # -compute gradient by backward propagation
         # -update weights
         # -return the loss
+        pass
         #TODO
         
         
@@ -66,6 +67,7 @@ class Trainer:
         # predict
         # propagate through the network and calculate the loss and predictions
         # return the loss and the predictions
+        pass
         #TODO
         
     def train_epoch(self):
@@ -85,6 +87,7 @@ class Trainer:
         # save the predictions and the labels for each batch
         # calculate the average loss and average metrics of your choice. You might want to calculate these metrics in designated functions
         # return the loss and print the calculated metrics
+        pass
         #TODO
         
     
@@ -101,6 +104,7 @@ class Trainer:
             # use the save_checkpoint function to save the model (can be restricted to epochs with improvement)
             # check whether early stopping should be performed using the early stopping criterion and stop if so
             # return the losses for both training and validation
+            pass
         #TODO
                     
         

@@ -24,7 +24,7 @@ from sklearn.model_selection import train_test_split
 # TODO
 
 # go, go, go... call fit on trainer
-res = #TODO
+res = None#TODO 
 
 # plot the results
 plt.plot(np.arange(len(res[0])), res[0], label='train loss')
