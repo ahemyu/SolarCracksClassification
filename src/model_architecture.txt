@@ -1,0 +1,84 @@
+ INPUT IMAGE (H x W x 3)
+      |
+      v
+  Conv2D(3 -> 64, kernel=7, stride=2)
+      |
+      v
+  BatchNorm
+      |
+      v
+  ReLU
+      |
+      v
+      |
+  MaxPool(kernel=3, stride=2)
+      v
+  =============== ResBlock 1 (64 -> 64, stride=1) ===============
+  |                                                              |
+  |  [MAIN PATH]                        [SKIP PATH]              |
+  |       |                                  |                   |
+  |   Conv2D(64->64, k=3, s=1)               |                   |
+  |       |                                  |                   |
+  |   BatchNorm                              |                   |
+  |       |                                  |                   |
+  |   ReLU                                   |                   |
+  |       |                                  |                   |
+  |   Conv2D(64->64, k=3, s=1)               |                   |
+  |       |                                  |                   |
+  |   BatchNorm                         1x1 Conv + BN            |
+  |       |                             (to match dims)          |
+  |       +-------------------<ADD>------+                       |
+  |                             |                                |
+  |                           ReLU                               |
+  ================================================================
+      |
+      v
+  =============== ResBlock 2 (64 -> 128, stride=2) ==============
+  |                                                              |
+  |  [MAIN PATH]                        [SKIP PATH]              |
+  |       |                                  |                   |
+  |   Conv2D(64->128, k=3, s=2)              |                   |
+  |       |                                  |                   |
+  |   BatchNorm                              |                   |
+  |       |                                  |                   |
+  |   ReLU                                   |                   |
+  |       |                                  |                   |
+  |   Conv2D(128->128, k=3, s=1)             |                   |
+  |       |                                  |                   |
+  |   BatchNorm                         1x1 Conv(s=2) + BN       |
+  |       |                             (to match dims)          |
+  |       +-------------------<ADD>------+                       |
+  |                             |                                |
+  |                           ReLU                               |
+  ================================================================
+      |
+      v
+  =============== ResBlock 3 (128 -> 256, stride=2) =============
+  |                                                              |
+  |  [SAME STRUCTURE AS RESBLOCK 2]                              |
+  |  Main path: 128 -> 256 channels, first conv has stride 2     |
+  |  Skip path: 1x1 conv to go 128 -> 256 with stride 2          |
+  ================================================================
+      |
+      v
+  =============== ResBlock 4 (256 -> 512, stride=2) =============
+  |                                                              |
+  |  [SAME STRUCTURE AS RESBLOCK 2]                              |
+  |  Main path: 256 -> 512 channels, first conv has stride 2     |
+  |  Skip path: 1x1 conv to go 256 -> 512 with stride 2          |
+  ================================================================
+      |
+      v
+  GlobalAvgPool (reduces spatial dims to 1x1)
+      |
+      v
+  Flatten (512 features)
+      |
+      v
+  FC(512 -> 2)
+      |
+      v
+  Sigmoid
+      |
+      v
+  OUTPUT (2 values, the labels)

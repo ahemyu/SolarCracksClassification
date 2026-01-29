@@ -11,7 +11,6 @@ train_mean = [0.59685254, 0.59685254, 0.59685254]
 train_std = [0.16043035, 0.16043035, 0.16043035]
 
 class ChallengeDataset(Dataset):
-    # TODO implement the Dataset class according to the description
     def __init__(self, data: pd.DataFrame, mode: str = "train"):
         self.data = data # csv containing labels
         self.mode = mode # train or val
