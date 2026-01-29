@@ -50,16 +50,26 @@ class Trainer:
                             'output' : {0 : 'batch_size'}})
             
     def train_step(self, x, y):
+        # I am assuming that x is an data sample and y is a tuple with the ground truth labels?
         # perform following steps:
-        # -reset the gradients. By default, PyTorch accumulates (sums up) gradients when backward() is called. This behavior is not required here, so you need to ensure that all the gradients are zero before calling the backward.
+        # -reset the gradients. By default, PyTorch accumulates (sums up) gradients when backward() is called.
+        # This behavior is not required here, so you need to ensure that all the gradients are zero before calling the backward.
+        if self._optim is not None: 
+            self._optim.zero_grad()
+
         # -propagate through the network
+        y_pred = self._model(x)
         # -calculate the loss
+
+        loss = self._crit(y_pred, y) #TODO: not sure if this order is correct
         # -compute gradient by backward propagation
+        loss.backward()
+
         # -update weights
+        self._optim.step()
+
         # -return the loss
-        pass
-        #TODO
-        
+        return loss
         
     
     def val_test_step(self, x, y):
@@ -67,16 +77,23 @@ class Trainer:
         # predict
         # propagate through the network and calculate the loss and predictions
         # return the loss and the predictions
-        pass
-        #TODO
+        y_pred = self._model(x)
+        loss = self._crit(y_pred, y) #TODO: not sure if this order is correct
         
+        return loss, y_pred #TODO: Do the preds need to be transformed first?
+
+
     def train_epoch(self):
-        # set training mode
+        # set training mode, #TODO: how exactly?
         # iterate through the training set
-        # transfer the batch to "cuda()" -> the gpu if a gpu is given
-        # perform a training step
+        loss_batches = []
+        for batch in self._train_dl:
+            # transfer the batch to "cuda()" -> the gpu if a gpu is given
+            batch.to("cuda")
+            # perform a training step. For this I need to know which shape batch exactly has
+
         # calculate the average loss for the epoch and return it
-        #TODO
+        
     
     def val_test(self):
         # set eval mode. Some layers have different behaviors during training and testing (for example: Dropout, BatchNorm, etc.). To handle those properly, you'd want to call model.eval()
@@ -93,7 +110,7 @@ class Trainer:
     
     def fit(self, epochs=-1):
         assert self._early_stopping_patience > 0 or epochs > 0
-        # create a list for the train and validation losses, and create a counter for the epoch 
+         # create a list for the train and validation losses, and create a counter for the epoch 
         #TODO
         
         while True:
@@ -108,5 +125,9 @@ class Trainer:
         #TODO
                     
         
-        
-        
+# The training process consists of alternating between training for one epoch on the training
+# dataset (training step) and then assessing the performance on the validation dataset (validation
+# step). After that, a decision is made if the training process should be continued. A common
+# stopping criterion is called EarlyStopping with the following behaviour: If the validation loss
+# does not decrease after a specified number of epochs, then the training process will be stopped.
+# This criterion will be used in our implementation and should be realised in trainer.py.       
