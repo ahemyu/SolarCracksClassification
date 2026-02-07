@@ -50,6 +50,7 @@ def _recall(prediction_batches):
     recall_per_label = recall_score(y_true, y_pred, average=None, zero_division=0)
     return recall_macro, recall_per_label
 
+
 class Trainer:
 
     def __init__(self,
@@ -158,40 +159,60 @@ class Trainer:
                 # save the predictions and the labels for each batch
                 prediction_batches.append((pred, y))
 
-        #TODO: calculate some metrics
         # F1 score, PR-AUC and Recall
         f1 = _f1(prediction_batches)
         pr_auc = _pr_auc(prediction_batches)
         recall_macro, recall_per_label = _recall(prediction_batches)
 
-        #TODO: print those metrics
         print("F1: \n", f1)
         print("PR-AUC: \n", pr_auc)
         print("Recall Macro: \n", recall_macro)
         print("Recall per label [crack, inactive]: \n", recall_per_label)
         return np.mean(loss_batches)
         
-    
+
+    def _early_stop(self, curr_loss):
+        if curr_loss < self.best_val_loss: 
+            # we have an improvement so we do not stop
+            self.best_val_loss = curr_loss
+            self.no_improv_counter = 0 #reset counter to 0 bc we found better loss
+            return False
+            
+        self.no_improv_counter += 1
+        if self.no_improv_counter >= self._early_stopping_patience:
+            # we need to stop
+            return True
+
+        # we still have some patience
+        return False
+
+
     def fit(self, epochs=-1):
         assert self._early_stopping_patience > 0 or epochs > 0
-         # create a list for the train and validation losses, and create a counter for the epoch 
-        #TODO
+        if epochs <= 0:
+            return None, None
+
+        train_losses = []
+        val_losses = []
+        counter = 0
+        self.best_val_loss = float('inf') #for early stopping
+        self.no_improv_counter = 0 #for early stopping
         
         while True:
-      
             # stop by epoch number
-            # train for a epoch and then calculate the loss and metrics on the validation set
-            # append the losses to the respective lists
+            if counter >= epochs:
+                break
+            # train for a epoch 
+            train_losses.append(self.train_epoch())
+            # calculate the loss and metrics on the validation set
+            val_loss = self.val_test()
+            val_losses.append(val_loss)
             # use the save_checkpoint function to save the model (can be restricted to epochs with improvement)
+            self.save_checkpoint(counter)
+
             # check whether early stopping should be performed using the early stopping criterion and stop if so
-            # return the losses for both training and validation
-            pass
-        #TODO
-                    
-        
-# The training process consists of alternating between training for one epoch on the training
-# dataset (training step) and then assessing the performance on the validation dataset (validation
-# step). After that, a decision is made if the training process should be continued. A common
-# stopping criterion is called EarlyStopping with the following behaviour: If the validation loss
-# does not decrease after a specified number of epochs, then the training process will be stopped.
-# This criterion will be used in our implementation and should be realised in trainer.py.       
+            if self._early_stopping_patience > 0 and self._early_stop(val_loss):
+                break
+            counter+=1
+    
+        return train_losses, val_losses
