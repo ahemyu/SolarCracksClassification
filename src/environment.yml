@@ -19,3 +19,4 @@ dependencies:
   - tqdm>=4.36
   - pip:
     - onnxruntime
+    - iterative-stratification

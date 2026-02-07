@@ -4,3 +4,4 @@ CLAUDE.md
 __pycache__/
 src/checkpoints/
 src/losses/
+dataset_info.txt

@@ -18,7 +18,9 @@ def _f1(prediction_batches):
     y_pred = t.cat(preds_binary, dim=0).cpu().numpy() 
     y_true = t.cat(labels, dim=0).cpu().numpy()
 
-    return f1_score(y_true, y_pred, average="macro", zero_division=0)
+    f1_macro = f1_score(y_true, y_pred, average="macro", zero_division=0)
+    f1_per_label = f1_score(y_true, y_pred, average=None, zero_division=0)
+    return f1_macro, f1_per_label
 
 
 def _pr_auc(prediction_batches):
@@ -61,19 +63,29 @@ class Trainer:
                  train_dl=None,                # Training data set
                  val_test_dl=None,             # Validation (or test) data set
                  cuda=True,                    # Whether to use the GPU
-                 early_stopping_patience=-1):  # The patience for early stopping
+                 early_stopping_patience=-1,   # The patience for early stopping
+                 run_log_path=None):           # Optional path to append run logs
         self._model = model
         self._crit = crit
         self._optim = optim
         self._train_dl = train_dl
         self._val_test_dl = val_test_dl
         self._cuda = cuda
+        self._run_log_path = run_log_path
 
         self._early_stopping_patience = early_stopping_patience
+        if self._run_log_path is not None:
+            Path(self._run_log_path).parent.mkdir(parents=True, exist_ok=True)
 
         if cuda:
             self._model = model.cuda()
             self._crit = crit.cuda()
+
+    def _log_line(self, line):
+        if self._run_log_path is None:
+            return
+        with open(self._run_log_path, "a", encoding="utf-8") as fp:
+            fp.write(line + "\n")
 
     def _move_to_device(self, x, y):
         if self._cuda:
@@ -171,13 +183,15 @@ class Trainer:
                 progress.set_postfix(batch_loss=f"{batch_loss:.4f}")
 
         # F1 score, PR-AUC and Recall
-        f1 = _f1(prediction_batches)
+        f1_macro, f1_per_label = _f1(prediction_batches)
         pr_auc = _pr_auc(prediction_batches)
         recall_macro, recall_per_label = _recall(prediction_batches)
 
         val_loss = np.mean(loss_batches)
         metrics = {
-            "f1": f1,
+            "f1_macro": f1_macro,
+            "f1_crack": f1_per_label[0],
+            "f1_inactive": f1_per_label[1],
             "pr_auc": pr_auc,
             "recall_macro": recall_macro,
             "recall_crack": recall_per_label[0],
@@ -211,6 +225,7 @@ class Trainer:
         val_losses = []
         self.best_val_loss = float('inf') #for early stopping
         self.no_improv_counter = 0 #for early stopping
+        self._log_line(f"fit_start epochs={epochs} early_stopping_patience={self._early_stopping_patience}")
         
         epoch_progress = tqdm(range(epochs), desc="Epochs")
         for counter in epoch_progress:
@@ -227,22 +242,28 @@ class Trainer:
                 f"epoch {counter + 1:03d}/{epochs:03d} | "
                 f"train_loss={train_loss:.4f} | "
                 f"val_loss={val_loss:.4f} | "
-                f"f1={metrics['f1']:.4f} | "
+                f"f1_macro={metrics['f1_macro']:.4f} | "
+                f"f1_crack={metrics['f1_crack']:.4f} | "
+                f"f1_inactive={metrics['f1_inactive']:.4f} | "
                 f"pr_auc={metrics['pr_auc']:.4f} | "
                 f"recall_macro={metrics['recall_macro']:.4f} | "
                 f"recall_crack={metrics['recall_crack']:.4f} | "
                 f"recall_inactive={metrics['recall_inactive']:.4f}"
             )
             tqdm.write(summary)
+            self._log_line(summary)
             epoch_progress.set_postfix(
                 train_loss=f"{train_loss:.4f}",
                 val_loss=f"{val_loss:.4f}",
-                f1=f"{metrics['f1']:.4f}",
+                f1=f"{metrics['f1_macro']:.4f}",
             )
 
             # check whether early stopping should be performed using the early stopping criterion and stop if so
             if self._early_stopping_patience > 0 and self._early_stop(val_loss):
-                tqdm.write(f"Early stopping triggered at epoch {counter + 1}.")
+                early_stop_message = f"Early stopping triggered at epoch {counter + 1}."
+                tqdm.write(early_stop_message)
+                self._log_line(early_stop_message)
                 break
     
+        self._log_line("fit_end")
         return train_losses, val_losses

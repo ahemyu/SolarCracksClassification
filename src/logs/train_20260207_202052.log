@@ -1,0 +1,39 @@
+fit_start epochs=300 early_stopping_patience=10
+epoch 001/300 | train_loss=0.3716 | val_loss=0.2786 | f1_macro=0.4430 | f1_crack=0.5660 | f1_inactive=0.3200 | pr_auc=0.5495 | recall_macro=0.3350 | recall_crack=0.4478 | recall_inactive=0.2222
+epoch 002/300 | train_loss=0.2972 | val_loss=0.4885 | f1_macro=0.5124 | f1_crack=0.6612 | f1_inactive=0.3636 | pr_auc=0.5221 | recall_macro=0.5207 | recall_crack=0.5970 | recall_inactive=0.4444
+epoch 003/300 | train_loss=0.2827 | val_loss=0.2684 | f1_macro=0.3801 | f1_crack=0.6549 | f1_inactive=0.1053 | pr_auc=0.5881 | recall_macro=0.3039 | recall_crack=0.5522 | recall_inactive=0.0556
+epoch 004/300 | train_loss=0.2774 | val_loss=0.2466 | f1_macro=0.6207 | f1_crack=0.7536 | f1_inactive=0.4878 | pr_auc=0.6426 | recall_macro=0.6658 | recall_crack=0.7761 | recall_inactive=0.5556
+epoch 005/300 | train_loss=0.2556 | val_loss=0.3417 | f1_macro=0.3597 | f1_crack=0.5455 | f1_inactive=0.1739 | pr_auc=0.4474 | recall_macro=0.2570 | recall_crack=0.4030 | recall_inactive=0.1111
+epoch 006/300 | train_loss=0.2672 | val_loss=0.3504 | f1_macro=0.5587 | f1_crack=0.7538 | f1_inactive=0.3636 | pr_auc=0.5450 | recall_macro=0.5879 | recall_crack=0.7313 | recall_inactive=0.4444
+epoch 007/300 | train_loss=0.2558 | val_loss=0.3178 | f1_macro=0.2297 | f1_crack=0.1867 | f1_inactive=0.2727 | pr_auc=0.5558 | recall_macro=0.1356 | recall_crack=0.1045 | recall_inactive=0.1667
+epoch 008/300 | train_loss=0.2448 | val_loss=0.2164 | f1_macro=0.6403 | f1_crack=0.7288 | f1_inactive=0.5517 | pr_auc=0.7087 | recall_macro=0.5431 | recall_crack=0.6418 | recall_inactive=0.4444
+epoch 009/300 | train_loss=0.2380 | val_loss=0.2227 | f1_macro=0.4780 | f1_crack=0.6226 | f1_inactive=0.3333 | pr_auc=0.7085 | recall_macro=0.3574 | recall_crack=0.4925 | recall_inactive=0.2222
+epoch 010/300 | train_loss=0.2319 | val_loss=0.2056 | f1_macro=0.5867 | f1_crack=0.7119 | f1_inactive=0.4615 | pr_auc=0.7463 | recall_macro=0.4801 | recall_crack=0.6269 | recall_inactive=0.3333
+epoch 011/300 | train_loss=0.2237 | val_loss=0.2037 | f1_macro=0.6078 | f1_crack=0.7541 | f1_inactive=0.4615 | pr_auc=0.7507 | recall_macro=0.5100 | recall_crack=0.6866 | recall_inactive=0.3333
+epoch 012/300 | train_loss=0.2216 | val_loss=0.2133 | f1_macro=0.5955 | f1_crack=0.6726 | f1_inactive=0.5185 | pr_auc=0.7750 | recall_macro=0.4780 | recall_crack=0.5672 | recall_inactive=0.3889
+epoch 013/300 | train_loss=0.2318 | val_loss=0.2187 | f1_macro=0.5477 | f1_crack=0.6606 | f1_inactive=0.4348 | pr_auc=0.7685 | recall_macro=0.4075 | recall_crack=0.5373 | recall_inactive=0.2778
+epoch 014/300 | train_loss=0.2209 | val_loss=0.3270 | f1_macro=0.3524 | f1_crack=0.5049 | f1_inactive=0.2000 | pr_auc=0.6132 | recall_macro=0.2496 | recall_crack=0.3881 | recall_inactive=0.1111
+epoch 015/300 | train_loss=0.2212 | val_loss=0.2123 | f1_macro=0.5729 | f1_crack=0.6842 | f1_inactive=0.4615 | pr_auc=0.7551 | recall_macro=0.4577 | recall_crack=0.5821 | recall_inactive=0.3333
+epoch 016/300 | train_loss=0.2116 | val_loss=0.2119 | f1_macro=0.6644 | f1_crack=0.7481 | f1_inactive=0.5806 | pr_auc=0.7492 | recall_macro=0.6157 | recall_crack=0.7313 | recall_inactive=0.5000
+epoch 017/300 | train_loss=0.1990 | val_loss=0.2030 | f1_macro=0.6738 | f1_crack=0.7761 | f1_inactive=0.5714 | pr_auc=0.7649 | recall_macro=0.6103 | recall_crack=0.7761 | recall_inactive=0.4444
+epoch 018/300 | train_loss=0.2058 | val_loss=0.1980 | f1_macro=0.6613 | f1_crack=0.7419 | f1_inactive=0.5806 | pr_auc=0.7666 | recall_macro=0.5933 | recall_crack=0.6866 | recall_inactive=0.5000
+epoch 019/300 | train_loss=0.1979 | val_loss=0.2123 | f1_macro=0.7373 | f1_crack=0.7377 | f1_inactive=0.7368 | pr_auc=0.7644 | recall_macro=0.7247 | recall_crack=0.6716 | recall_inactive=0.7778
+epoch 020/300 | train_loss=0.1983 | val_loss=0.2075 | f1_macro=0.6521 | f1_crack=0.7442 | f1_inactive=0.5600 | pr_auc=0.7918 | recall_macro=0.5527 | recall_crack=0.7164 | recall_inactive=0.3889
+epoch 021/300 | train_loss=0.1942 | val_loss=0.2550 | f1_macro=0.4754 | f1_crack=0.5872 | f1_inactive=0.3636 | pr_auc=0.7137 | recall_macro=0.3499 | recall_crack=0.4776 | recall_inactive=0.2222
+epoch 022/300 | train_loss=0.1952 | val_loss=0.2070 | f1_macro=0.6617 | f1_crack=0.7519 | f1_inactive=0.5714 | pr_auc=0.7863 | recall_macro=0.5954 | recall_crack=0.7463 | recall_inactive=0.4444
+epoch 023/300 | train_loss=0.1863 | val_loss=0.1941 | f1_macro=0.6576 | f1_crack=0.7227 | f1_inactive=0.5926 | pr_auc=0.8067 | recall_macro=0.5431 | recall_crack=0.6418 | recall_inactive=0.4444
+epoch 024/300 | train_loss=0.1762 | val_loss=0.2059 | f1_macro=0.6349 | f1_crack=0.6984 | f1_inactive=0.5714 | pr_auc=0.7450 | recall_macro=0.5506 | recall_crack=0.6567 | recall_inactive=0.4444
+epoch 025/300 | train_loss=0.1753 | val_loss=0.2227 | f1_macro=0.6872 | f1_crack=0.6316 | f1_inactive=0.7429 | pr_auc=0.7752 | recall_macro=0.6298 | recall_crack=0.5373 | recall_inactive=0.7222
+epoch 026/300 | train_loss=0.1750 | val_loss=0.1856 | f1_macro=0.7548 | f1_crack=0.7597 | f1_inactive=0.7500 | pr_auc=0.8030 | recall_macro=0.6990 | recall_crack=0.7313 | recall_inactive=0.6667
+epoch 027/300 | train_loss=0.1832 | val_loss=0.2210 | f1_macro=0.7004 | f1_crack=0.6949 | f1_inactive=0.7059 | pr_auc=0.7728 | recall_macro=0.6393 | recall_crack=0.6119 | recall_inactive=0.6667
+epoch 028/300 | train_loss=0.1693 | val_loss=0.2223 | f1_macro=0.7186 | f1_crack=0.7313 | f1_inactive=0.7059 | pr_auc=0.7794 | recall_macro=0.6990 | recall_crack=0.7313 | recall_inactive=0.6667
+epoch 029/300 | train_loss=0.1681 | val_loss=0.2015 | f1_macro=0.7296 | f1_crack=0.7259 | f1_inactive=0.7333 | pr_auc=0.8111 | recall_macro=0.6712 | recall_crack=0.7313 | recall_inactive=0.6111
+epoch 030/300 | train_loss=0.1650 | val_loss=0.2224 | f1_macro=0.6077 | f1_crack=0.7153 | f1_inactive=0.5000 | pr_auc=0.7695 | recall_macro=0.5323 | recall_crack=0.7313 | recall_inactive=0.3333
+epoch 031/300 | train_loss=0.1629 | val_loss=0.3420 | f1_macro=0.3978 | f1_crack=0.5098 | f1_inactive=0.2857 | pr_auc=0.6686 | recall_macro=0.2774 | recall_crack=0.3881 | recall_inactive=0.1667
+epoch 032/300 | train_loss=0.1521 | val_loss=0.2698 | f1_macro=0.6093 | f1_crack=0.6261 | f1_inactive=0.5926 | pr_auc=0.7066 | recall_macro=0.4909 | recall_crack=0.5373 | recall_inactive=0.4444
+epoch 033/300 | train_loss=0.1470 | val_loss=0.2017 | f1_macro=0.6406 | f1_crack=0.6885 | f1_inactive=0.5926 | pr_auc=0.7490 | recall_macro=0.5357 | recall_crack=0.6269 | recall_inactive=0.4444
+epoch 034/300 | train_loss=0.1452 | val_loss=0.2195 | f1_macro=0.6765 | f1_crack=0.7101 | f1_inactive=0.6429 | pr_auc=0.8078 | recall_macro=0.6157 | recall_crack=0.7313 | recall_inactive=0.5000
+epoch 035/300 | train_loss=0.1471 | val_loss=0.2048 | f1_macro=0.6961 | f1_crack=0.6780 | f1_inactive=0.7143 | pr_auc=0.8014 | recall_macro=0.5763 | recall_crack=0.5970 | recall_inactive=0.5556
+epoch 036/300 | train_loss=0.1409 | val_loss=0.1963 | f1_macro=0.7454 | f1_crack=0.7407 | f1_inactive=0.7500 | pr_auc=0.8154 | recall_macro=0.7065 | recall_crack=0.7463 | recall_inactive=0.6667
+Early stopping triggered at epoch 36.
+fit_end

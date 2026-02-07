@@ -1,0 +1,20 @@
+What to try/add after the vanilla implementation: 
+
+- Use iterative stratified splitting on `[crack, inactive]` and keep fixed train/val/test seeds.
+    - improved f1 score by 
+
+- Use f1 score AND validation loss as early stopping criterion
+
+- Implement train-only augmentations; keep val/test transforms deterministic and identical.
+
+- Handle label imbalance (`inactive` is rare) via weighted BCE/focal loss and/or `WeightedRandomSampler`.
+
+- Tune per-label probability thresholds on validation to maximize macro-F1 (do not hardcode `0.5`).
+
+- Early-stop and select checkpoints by `f1_macro` (or target F1), not validation loss only.
+
+- Run a compact hyperparameter sweep: learning rate, weight decay, batch size, patience, scheduler.
+
+- Use K-fold/Repeated validation for robust model selection on this small, imbalanced dataset.
+
+- Keep test set untouched until final evaluation; use validation only for tuning.
