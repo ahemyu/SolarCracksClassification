@@ -50,14 +50,3 @@ class ResNet(nn.Module):
     def forward(self, input_tensor: torch.Tensor):
         #send the input through all of the layers
         return self.layers(input_tensor)
-
-
-# # test code
-# from data import ChallengeDataset
-# import pandas as pd
-# data = pd.read_csv("labels.csv", sep=";")
-# dataset = ChallengeDataset(data)
-# sample = dataset[0][0].unsqueeze(0)
-# model = Model()
-# res = model.forward(sample)
-# print(res)

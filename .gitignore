@@ -2,3 +2,5 @@ AGENTS.md
 CLAUDE.md
 .venv/
 __pycache__/
+src/checkpoints/
+src/losses/

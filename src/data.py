@@ -31,7 +31,7 @@ class ChallengeDataset(Dataset):
         image_path = row.filename
         image_greyscale = imread(Path(image_path))
         image_rgb = gray2rgb(image_greyscale)
-        labels = torch.tensor((int(row.crack), int(row.inactive))) #TODO: shall these be ints or floats?
+        labels = torch.tensor((float(row.crack), float(row.inactive))) #TODO: shall these be ints or floats?
         image_augmented = self._transform(image_rgb)
 
         return (image_augmented, labels)
