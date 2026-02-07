@@ -1,7 +1,54 @@
 import torch as t
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, average_precision_score, recall_score
 from tqdm.autonotebook import tqdm
+import numpy as np
 
+
+def _f1(prediction_batches):
+    preds_binary = []
+    labels = []
+
+    for pred, label in prediction_batches:
+        pred_bin = (pred >= 0.5).int() # we have probs but need binary data
+        preds_binary.append(pred_bin)
+        labels.append(label.int())
+
+    #sklearn needs the data on cpu
+    y_pred = t.cat(preds_binary, dim=0).cpu().numpy() 
+    y_true = t.cat(labels, dim=0).cpu().numpy()
+
+    return f1_score(y_true, y_pred, average="macro", zero_division=0)
+
+
+def _pr_auc(prediction_batches):
+    preds_probs = []
+    labels = []
+
+    for pred, label in prediction_batches:
+        preds_probs.append(pred)
+        labels.append(label.int())
+
+    y_prob = t.cat(preds_probs, dim=0).cpu().numpy()
+    y_true = t.cat(labels, dim=0).cpu().numpy()
+
+    return average_precision_score(y_true, y_prob, average="macro")
+
+
+def _recall(prediction_batches):
+    preds_binary = []
+    labels = []
+
+    for pred, label in prediction_batches:
+        pred_bin = (pred >= 0.5).int()
+        preds_binary.append(pred_bin)
+        labels.append(label.int())
+
+    y_pred = t.cat(preds_binary, dim=0).cpu().numpy()
+    y_true = t.cat(labels, dim=0).cpu().numpy()
+
+    recall_macro = recall_score(y_true, y_pred, average="macro", zero_division=0)
+    recall_per_label = recall_score(y_true, y_pred, average=None, zero_division=0)
+    return recall_macro, recall_per_label
 
 class Trainer:
 
@@ -60,52 +107,69 @@ class Trainer:
         # -propagate through the network
         y_pred = self._model(x)
         # -calculate the loss
-
-        loss = self._crit(y_pred, y) #TODO: not sure if this order is correct
+        loss = self._crit(y_pred, y)
         # -compute gradient by backward propagation
         loss.backward()
 
         # -update weights
-        self._optim.step()
+        if self._optim is not None: 
+            self._optim.step()
 
         # -return the loss
         return loss
         
     
     def val_test_step(self, x, y):
-        
-        # predict
-        # propagate through the network and calculate the loss and predictions
-        # return the loss and the predictions
         y_pred = self._model(x)
-        loss = self._crit(y_pred, y) #TODO: not sure if this order is correct
+        loss = self._crit(y_pred, y)
         
-        return loss, y_pred #TODO: Do the preds need to be transformed first?
+        return loss, y_pred
 
 
     def train_epoch(self):
-        # set training mode, #TODO: how exactly?
+        # set training mode
+        self._model.train() #this will activate training mode on all layers that support it
         # iterate through the training set
         loss_batches = []
-        for batch in self._train_dl:
+        for x, y in self._train_dl:
             # transfer the batch to "cuda()" -> the gpu if a gpu is given
-            batch.to("cuda")
-            # perform a training step. For this I need to know which shape batch exactly has
+            x = x.cuda()
+            y = y.cuda()
+            # call train step function to get loss
+            loss_batches.append(self.train_step(x, y).item())
 
         # calculate the average loss for the epoch and return it
+        return np.mean(loss_batches)
         
-    
+ 
     def val_test(self):
-        # set eval mode. Some layers have different behaviors during training and testing (for example: Dropout, BatchNorm, etc.). To handle those properly, you'd want to call model.eval()
-        # disable gradient computation. Since you don't need to update the weights during testing, gradients aren't required anymore. 
-        # iterate through the validation set
-        # transfer the batch to the gpu if given
-        # perform a validation step
-        # save the predictions and the labels for each batch
-        # calculate the average loss and average metrics of your choice. You might want to calculate these metrics in designated functions
-        # return the loss and print the calculated metrics
-        pass
-        #TODO
+        self._model.eval()
+        with t.no_grad(): #we do not need gradients
+            prediction_batches = [] #stores (pred, label) per batch
+            loss_batches = []
+            # iterate through the validation set
+            for x, y in self._val_test_dl:
+                # transfer the batch to the gpu if given
+                x = x.cuda()
+                y = y.cuda()
+                # perform a validation step
+                loss, pred = self.val_test_step(x, y)
+                loss_batches.append(loss.item())
+                # save the predictions and the labels for each batch
+                prediction_batches.append((pred, y))
+
+        #TODO: calculate some metrics
+        # F1 score, PR-AUC and Recall
+        f1 = _f1(prediction_batches)
+        pr_auc = _pr_auc(prediction_batches)
+        recall_macro, recall_per_label = _recall(prediction_batches)
+
+        #TODO: print those metrics
+        print("F1: \n", f1)
+        print("PR-AUC: \n", pr_auc)
+        print("Recall Macro: \n", recall_macro)
+        print("Recall per label [crack, inactive]: \n", recall_per_label)
+        return np.mean(loss_batches)
         
     
     def fit(self, epochs=-1):

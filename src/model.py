@@ -20,7 +20,7 @@ class ResBlock(nn.Module):
             nn.BatchNorm2d(out_channels)
         )
     
-    def forward(self, input_tensor: torch.tensor): 
+    def forward(self, input_tensor: torch.Tensor): 
         #send input through main path
         main_path = self.main(input_tensor)
         #send input through skip path
@@ -29,7 +29,7 @@ class ResBlock(nn.Module):
         return F.relu(main_path + skip_path)
 
 
-class Model(nn.Module):
+class ResNet(nn.Module):
     """Variant of Resnet Architecture for multilabel classification."""
     def __init__(self) -> None:
         super().__init__()
@@ -47,7 +47,7 @@ class Model(nn.Module):
             nn.Linear(512, 2),
             nn.Sigmoid()
         )
-    def forward(self, input_tensor: torch.tensor):
+    def forward(self, input_tensor: torch.Tensor):
         #send the input through all of the layers
         return self.layers(input_tensor)
 
